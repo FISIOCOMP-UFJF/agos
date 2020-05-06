@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.1)
-project(Agos)
+project(agos)
 
 macro(USE_C99)
     if (CMAKE_VERSION VERSION_LESS "3.1")
