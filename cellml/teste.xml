@@ -1,0 +1,26 @@
+<math >
+	<apply>
+	<eq/>
+	<ci>i_Kr</ci>
+	<apply>
+		<times/>
+		<ci>g_Kr</ci>
+		<apply>
+			<root/>
+			<apply>
+				<divide/>
+				<ci>K_o</ci>
+				<cn>5.4</cn>
+			</apply>
+		</apply>
+		<apply>
+			<minus/>
+			<ci>V</ci>
+			<ci>E_K</ci>
+		</apply>
+		
+		<ci>Xr1</ci>
+		<ci>Xr2</ci>
+		</apply>
+	</apply>
+</math>

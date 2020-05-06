@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--  FILE :  fitzhugh_nagumo_model_1961.xml
+
+CREATED :  28th December 2001
+
+LAST MODIFIED : 11th August 2003
+
+AUTHOR :  Catherine Lloyd
+          Department of Engineering Science
+          The University of Auckland
+          
+MODEL STATUS :  This model conforms to the CellML 1.0 Specification released on
+10th August 2001, and the 16/01/2002 CellML Metadata 1.0 Specification.
+
+DESCRIPTION :  This file contains a CellML description of FitzHugh and Nagumo's
+1961 simplified model of cardiac myocytes.
+
+CHANGES: 
+  03/01/2002 - CML - Added Aliev and Panfilov (1996) modifications.
+  21/01/2002 - AAC - Updated metadata to conform to the 16/1/02 CellML Metadata
+                     1.0 Specification.
+  25/02/2002 - CML - Corrected an equation.
+  10/07/2002 - CML - Removed modifications component - as this is not the 
+                     original model.
+  11/08/2003 - CML - Separated out equations into different components.
+-->
+<model name="fitzhugh_nagumo_model_1961" cmeta:id="fitzhugh_nagumo_model_1961" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqs="http://www.cellml.org/bqs/1.0#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+    <!--
+      The following RDF block contains metadata that applies to this document
+      as a whole, as indicated by the empty about attribute on the 
+      <rdf:Description> element.
+    -->
+    <rdf:Description rdf:about="">
+      <!--
+        The Model Builder Metadata.  The Dublin Core "creator" element is used  
+        to indicate the person who translated the model into CellML.
+      -->
+      <dc:creator rdf:parseType="Resource">
+        <vCard:N rdf:parseType="Resource">
+          <vCard:Family>Lloyd</vCard:Family>
+          <vCard:Given>Catherine</vCard:Given>
+          <vCard:Other>May</vCard:Other>
+        </vCard:N>
+        <vCard:EMAIL rdf:parseType="Resource">
+          <rdf:value>c.lloyd@auckland.ac.nz</rdf:value>
+          <rdf:type rdf:resource="http://imc.org/vCard/3.0#internet"/>
+        </vCard:EMAIL>
+        <vCard:ORG rdf:parseType="Resource">
+          <vCard:Orgname>The University of Auckland</vCard:Orgname>
+          <vCard:Orgunit>The Bioengineering Research Group</vCard:Orgunit>
+        </vCard:ORG>
+      </dc:creator>
+      
+      <!--
+        The Creation Date metadata. This is the date on which the model
+        was translated into CellML.
+      -->
+      <dcterms:created rdf:parseType="Resource">
+        <dcterms:W3CDTF>2001-12-28</dcterms:W3CDTF>
+      </dcterms:created>
+      
+      <!--
+        The Modification History metadata. This lists the changes that have been
+        made to the document, who made the changes, and when they were made.
+      -->
+      <cmeta:modification rdf:parseType="Resource">
+        <rdf:value>
+          Separated out equations into different components.
+        </rdf:value>
+        <cmeta:modifier rdf:parseType="Resource">
+          <vCard:N rdf:parseType="Resource">
+            <vCard:Family>Lloyd</vCard:Family>
+            <vCard:Given>Catherine</vCard:Given>
+            <vCard:Other>May</vCard:Other>
+          </vCard:N>
+        </cmeta:modifier>
+        <dcterms:modified rdf:parseType="Resource">
+          <dcterms:W3CDTF>2003-08-11</dcterms:W3CDTF>
+        </dcterms:modified>
+      </cmeta:modification> 
+      <cmeta:modification rdf:parseType="Resource">
+        <rdf:value>
+          Corrected an equation.
+        </rdf:value>
+        <cmeta:modifier rdf:parseType="Resource">
+          <vCard:N rdf:parseType="Resource">
+            <vCard:Family>Lloyd</vCard:Family>
+            <vCard:Given>Catherine</vCard:Given>
+            <vCard:Other>May</vCard:Other>
+          </vCard:N>
+        </cmeta:modifier>
+        <dcterms:modified rdf:parseType="Resource">
+          <dcterms:W3CDTF>2002-02-25</dcterms:W3CDTF>
+        </dcterms:modified>
+      </cmeta:modification> 
+      <cmeta:modification rdf:parseType="Resource">
+        <rdf:value>
+          Updated metadata to conform to the 16/1/02 CellML Metadata 1.0 
+          Specification.
+        </rdf:value>
+        <cmeta:modifier rdf:parseType="Resource">
+          <vCard:N rdf:parseType="Resource">
+            <vCard:Family>Cuellar</vCard:Family>
+            <vCard:Given>Autumn</vCard:Given>
+            <vCard:Other>A.</vCard:Other>
+          </vCard:N>
+        </cmeta:modifier>
+        <dcterms:modified rdf:parseType="Resource">
+          <dcterms:W3CDTF>2002-01-21</dcterms:W3CDTF>
+        </dcterms:modified>
+      </cmeta:modification>
+      <cmeta:modification rdf:parseType="Resource">
+        <rdf:value>
+          Added Aliev and Panfilov (1996) modifications.
+        </rdf:value>
+        <cmeta:modifier rdf:parseType="Resource">
+          <vCard:N rdf:parseType="Resource">
+            <vCard:Family>Lloyd</vCard:Family>
+            <vCard:Given>Catherine</vCard:Given>
+            <vCard:Other>May</vCard:Other>
+          </vCard:N>
+        </cmeta:modifier>
+        <dcterms:modified rdf:parseType="Resource">
+          <dcterms:W3CDTF>2002-01-03</dcterms:W3CDTF>
+        </dcterms:modified>
+      </cmeta:modification>
+      <cmeta:modification rdf:parseType="Resource">
+        <rdf:value>
+          Removed Aliev and Panfilov (1996) modifications.  Have now implemented           them in CellML 1.1 component reuse.
+        </rdf:value>
+        <cmeta:modifier rdf:parseType="Resource">
+          <vCard:N rdf:parseType="Resource">
+            <vCard:Family>Lloyd</vCard:Family>
+            <vCard:Given>Catherine</vCard:Given>
+            <vCard:Other>May</vCard:Other>
+          </vCard:N>
+        </cmeta:modifier>
+        <dcterms:modified rdf:parseType="Resource">
+          <dcterms:W3CDTF>2002-07-10</dcterms:W3CDTF>
+        </dcterms:modified>
+      </cmeta:modification>
+     
+      <!-- The Publisher metadata. -->
+      <dc:publisher>
+        The University of Auckland, Bioengineering Research Group
+      </dc:publisher>
+    </rdf:Description>
+    
+    <!--
+      The following metadata refers to the model itself, as indicated by the
+      reference to the ID "fitzhugh_nagumo_model_1961", which is declared on the
+      <model> element.
+    -->
+    <rdf:Description rdf:about="#fitzhugh_nagumo_model_1961">
+      <!-- A human readable name for the model. -->
+      <dc:title>
+        The FitzHugh-Nagumo 1961 Simplified Model of a Cardiac Myocyte
+      </dc:title>
+      
+      <!-- A comment regarding the model. -->
+      <cmeta:comment rdf:parseType="Resource">
+        <rdf:value>
+          This is the CellML description of the FitzHugh-Nagumo 1961 simplified 
+          model of a cardiac myocyte.  It is based on the cubic excitation model
+          but also includes a recovery variable so both depolarisation and 
+          repolarisation can be modelled.
+        </rdf:value>
+        <!-- The creator of the comment. -->
+        <dc:creator rdf:parseType="Resource">
+          <vCard:FN>Catherine Lloyd</vCard:FN>
+        </dc:creator>
+      </cmeta:comment>
+      
+      <cmeta:bio_entity>Cardiac Myocyte</cmeta:bio_entity>
+      
+      <!--  Keyword(s) -->
+      <bqs:reference rdf:parseType="Resource">
+        <dc:subject rdf:parseType="Resource">
+          <bqs:subject_type>keyword</bqs:subject_type>
+          <rdf:value>
+            <rdf:Bag>
+              <rdf:li>Myocyte</rdf:li>
+              <rdf:li>cardiac</rdf:li>
+              <rdf:li>electrophysiology</rdf:li>
+              <rdf:li>simplified model</rdf:li>
+            </rdf:Bag>
+          </rdf:value>
+        </dc:subject>
+      </bqs:reference>  
+      
+      <!-- 
+        The CellML Metadata Specification recommends that bibliographic metadata
+        is used to provide information about the original model reference.  The 
+        "identifier" attribute on the "BibliographicReference" class provides an
+        elegant way to identify a cited reference using a database identifier   
+        such as Pubmed.  All associated data such as author, journal title,     
+        date, etc can be looked up on the database.
+      -->
+      
+      <!-- 
+        The original paper is not available in Pubmed, so the citation is listed         with the appropriate BQS elements.
+      -->
+      <bqs:reference rdf:parseType="Resource">
+        <bqs:JournalArticle rdf:parseType="Resource">
+          <dc:creator rdf:parseType="Resource">
+            <bqs:Person rdf:parseType="Resource">
+              <vCard:N rdf:parseType="Resource">
+                <vCard:Family>Fitzhugh</vCard:Family>
+                <vCard:Given>R.A.</vCard:Given>
+              </vCard:N>
+            </bqs:Person>
+          </dc:creator>
+          <dc:title>
+            Impulses and physiological states in theoretical models of nerve 
+            membrane
+          </dc:title>
+          <dcterms:issued rdf:parseType="Resource">
+            <dcterms:W3CDTF>1961</dcterms:W3CDTF>
+          </dcterms:issued>
+          <bqs:Journal rdf:parseType="Resource">
+            <dc:title>Biophysical Journal</dc:title>
+          </bqs:Journal>
+          <bqs:volume>1</bqs:volume>
+          <bqs:first_page>445</bqs:first_page>
+          <bqs:last_page>466</bqs:last_page>
+        </bqs:JournalArticle>
+      </bqs:reference>
+
+      <bqs:reference rdf:parseType="Resource">
+        <bqs:JournalArticle rdf:parseType="Resource">
+          <dc:creator rdf:parseType="Resource">
+            <bqs:Person rdf:parseType="Resource">
+              <vCard:N rdf:parseType="Resource">
+                <vCard:Family>Nagumo</vCard:Family>
+                <vCard:Given>J.</vCard:Given>
+              </vCard:N>
+            </bqs:Person>
+          </dc:creator>
+          <dc:title>
+            An active pulse transmission line simulating nerve axon 
+          </dc:title>
+          <dcterms:issued rdf:parseType="Resource">
+            <dcterms:W3CDTF>1962</dcterms:W3CDTF>
+          </dcterms:issued>
+          <bqs:Journal rdf:parseType="Resource">
+            <dc:title>
+              Proceedings of the Institute of Radio Engineers 
+            </dc:title>
+          </bqs:Journal>
+          <bqs:volume>50</bqs:volume>
+          <bqs:first_page>2061</bqs:first_page>
+          <bqs:last_page>2070</bqs:last_page>
+        </bqs:JournalArticle>
+      </bqs:reference>
+
+      <cmeta:comment rdf:parseType="Resource">
+        <rdf:value>
+          The original FitzHugh and Nagumo papers are relatively old (1961 and 
+          1962) and are not available in the Pubmed database.  However, more 
+          recent publications of the FitzHugh-Nagumo model such as Rogers and 
+          McCulloch (1994a) and Aliev and Panfilov (1996), are referenced below 
+          (respectively).
+        </rdf:value>
+      </cmeta:comment>
+      
+      <bqs:reference rdf:parseType="Resource">
+        <bqs:Pubmed_id>7927397</bqs:Pubmed_id>
+      </bqs:reference>
+      <bqs:reference rdf:parseType="Resource">
+        <bqs:Pubmed_id>8796189</bqs:Pubmed_id>
+      </bqs:reference>
+      
+    </rdf:Description>
+  </rdf:RDF>
+  
+  <!--
+    Below, we define some additional units for association with variables and
+    constants within the model. The identifiers are fairly self-explanatory.
+  -->
+  
+  <units name="millisecond">
+    <unit prefix="milli" units="second"/>
+  </units>
+  
+  <units name="per_millisecond">
+    <unit prefix="milli" units="second" exponent="-1"/>
+  </units>
+  
+  <units name="millivolt">
+    <unit prefix="milli" units="volt"/>
+  </units>
+  
+  <units name="microA_per_mm2">
+    <unit prefix="micro" units="ampere"/>
+    <unit prefix="milli" units="metre" exponent="-2"/>
+  </units>
+  
+  <units name="microF_per_mm2">
+    <unit prefix="micro" units="farad"/>
+    <unit prefix="milli" units="metre" exponent="-2"/>
+  </units>
+  
+  <!--
+    The "environment" component is used to declare variables that are used by
+    all or most of the other components, in this case just "time".
+  -->
+  <component name="environment">
+    <variable name="time" public_interface="out" units="millisecond"/>
+  </component>
+  
+  <component name="membrane">
+    <variable name="u" public_interface="out" units="dimensionless"/>
+    <variable name="Vr" public_interface="out" initial_value="-85.0" units="millivolt"/>
+    <variable name="Vth" public_interface="out" initial_value="-75.0" units="millivolt"/>
+    <variable name="Vp" public_interface="out" initial_value="15.0" units="millivolt"/>
+    
+    <variable name="Cm" initial_value="0.01" units="microF_per_mm2"/>
+    <variable name="Vm" units="millivolt"/>
+    
+    <variable name="I_ion" public_interface="in" units="microA_per_mm2"/>
+    <variable name="time" public_interface="in" units="millisecond"/>
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply id="Vm_diff_eq"><eq/>
+        <apply><diff/>
+          <bvar><ci> time </ci></bvar>
+          <ci> Vm </ci>
+        </apply>
+        <apply><divide/>
+          <apply><minus/>
+            <ci> I_ion </ci>
+          </apply>
+          <ci> Cm </ci>
+        </apply>
+      </apply>
+              
+      <apply id="u_calculation"><eq/>
+        <ci> u </ci>
+        <apply><divide/>
+          <apply><minus/>
+            <ci> Vm </ci>
+            <ci> Vr </ci>
+          </apply>
+          <apply><minus/>
+            <ci> Vp </ci>
+            <ci> Vr </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component> 
+      
+  <component name="ionic_current">
+    <variable name="I_ion" public_interface="out" units="microA_per_mm2"/>
+    
+    <variable name="alpha" units="dimensionless"/>
+    <variable name="c1" initial_value="0.175" units="microA_per_mm2"/>
+    <variable name="c2" initial_value="0.03" units="microA_per_mm2"/>
+    
+    <variable name="v" public_interface="in" units="dimensionless"/>
+    <variable name="u" public_interface="in" units="dimensionless"/>
+    <variable name="Vr" public_interface="in" units="millivolt"/>
+    <variable name="Vth" public_interface="in" units="millivolt"/>
+    <variable name="Vp" public_interface="in" units="millivolt"/>
+    <variable name="time" public_interface="in" units="millisecond"/>     
+      
+    <math xmlns="http://www.w3.org/1998/Math/MathML">   
+      <apply id="alpha_calculation"><eq/>
+        <ci> alpha </ci>
+        <apply><divide/>
+          <apply><minus/>
+            <ci> Vth </ci>
+            <ci> Vr </ci>
+          </apply>
+          <apply><minus/>
+            <ci> Vp </ci>
+            <ci> Vr </ci>
+          </apply>
+        </apply>
+      </apply>
+      
+      <apply id="I_ion_calculation"><eq/>
+        <ci> I_ion </ci>
+        <apply><plus/>
+          <apply><times/>
+            <ci> c1 </ci>
+            <ci> u </ci>
+            <apply><minus/>
+              <ci> u </ci>
+              <ci> alpha </ci>
+            </apply>
+            <apply><minus/>
+              <ci> u </ci>
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+            </apply>
+          </apply>
+          <apply><times/>
+            <ci> c2 </ci>
+            <ci> v </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component> 
+  
+  <component name="recovery_variable">
+    <variable name="v" public_interface="out" units="dimensionless"/>
+    
+    <variable name="b" initial_value="0.011" units="per_millisecond"/>
+    <variable name="d" initial_value="0.55" units="dimensionless"/>
+    
+    <variable name="u" public_interface="in" units="dimensionless"/>
+    <variable name="time" public_interface="in" units="millisecond"/>     
+      
+    <math xmlns="http://www.w3.org/1998/Math/MathML">   
+      <apply id="v_diff_eq"><eq/>
+        <apply><diff/>
+          <bvar><ci> time </ci></bvar>
+          <ci> v </ci>
+        </apply>
+        <apply><times/>
+          <ci> b </ci>
+          <apply><minus/>
+            <ci> u </ci>
+            <apply><times/>
+              <ci> d </ci>
+              <ci> v </ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component> 
+      
+  <connection>
+    <map_components component_1="membrane" component_2="environment"/>
+    <map_variables variable_1="time" variable_2="time"/>
+  </connection>
+  
+  <connection>
+    <map_components component_1="ionic_current" component_2="environment"/>
+    <map_variables variable_1="time" variable_2="time"/>
+  </connection>
+  
+  <connection>
+    <map_components component_1="recovery_variable" component_2="environment"/>
+    <map_variables variable_1="time" variable_2="time"/>
+  </connection>
+  
+  <connection>
+    <map_components component_1="membrane" component_2="ionic_current"/>
+    <map_variables variable_1="u" variable_2="u"/>
+    <map_variables variable_1="Vr" variable_2="Vr"/>
+    <map_variables variable_1="Vth" variable_2="Vth"/>
+    <map_variables variable_1="Vp" variable_2="Vp"/>
+    <map_variables variable_1="I_ion" variable_2="I_ion"/>
+  </connection>
+  
+  <connection>
+    <map_components component_1="membrane" component_2="recovery_variable"/>
+    <map_variables variable_1="u" variable_2="u"/>
+  </connection>
+  
+  <connection>
+    <map_components component_1="ionic_current" component_2="recovery_variable"/>
+    <map_variables variable_1="v" variable_2="v"/>
+  </connection>
+  
+</model>

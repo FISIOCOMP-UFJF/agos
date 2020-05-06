@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sachetto/Projects/Agos/src/string/sds.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+ctype.h
+-
+assert.h
+-
+limits.h
+-
+sds.h
+/home/sachetto/Projects/Agos/src/string/sds.h
+sdsalloc.h
+/home/sachetto/Projects/Agos/src/string/sdsalloc.h
+stdio.h
+-
+testhelp.h
+/home/sachetto/Projects/Agos/src/string/testhelp.h
+limits.h
+/home/sachetto/Projects/Agos/src/string/limits.h
+
+/home/sachetto/Projects/Agos/src/string/sds.h
+sys/types.h
+-
+stdarg.h
+-
+stdint.h
+-
+
+/home/sachetto/Projects/Agos/src/string/sdsalloc.h
+

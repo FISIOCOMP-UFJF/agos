@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  FILE :  fitzhugh_nagumo_model_1961.xml
+
+CREATED :  28th December 2001
+
+LAST MODIFIED : 11th August 2003
+
+AUTHOR :  Catherine Lloyd
+          Department of Engineering Science
+          The University of Auckland
+          
+MODEL STATUS :  This model conforms to the CellML 1.0 Specification released on
+10th August 2001, and the 16/01/2002 CellML Metadata 1.0 Specification.
+
+DESCRIPTION :  This file contains a CellML description of FitzHugh and Nagumo's
+1961 simplified model of cardiac myocytes.
+
+CHANGES: 
+  03/01/2002 - CML - Added Aliev and Panfilov (1996) modifications.
+  21/01/2002 - AAC - Updated metadata to conform to the 16/1/02 CellML Metadata
+                     1.0 Specification.
+  25/02/2002 - CML - Corrected an equation.
+  10/07/2002 - CML - Removed modifications component - as this is not the 
+                     original model.
+  11/08/2003 - CML - Separated out equations into different components.
+-->
+<model xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqs="http://www.cellml.org/bqs/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" cmeta:id="nagumo_1961_version01" name="nagumo_1961_version01">
+<documentation xmlns="http://cellml.org/tmp-documentation">
+<article>
+  <articleinfo>
+  <title>The FitzHugh-Nagumo Simplified Cardiac Myocyte Model</title>
+  <author>
+    <firstname>Catherine</firstname>
+          <surname>Lloyd</surname>
+    <affiliation>
+      <shortaffil>Bioengineering Institute, University of Auckland</shortaffil>
+    </affiliation>
+  </author>
+</articleinfo>
+  <section id="sec_status">
+    <title>Model Status</title>
+    <para>
+            This is the original unchecked version of the model imported from the previous
+            CellML model repository, 24-Jan-2006.
+          </para>
+  </section>
+  <sect1 id="sec_structure">
+<title>Model Structure</title>
+
+<para>
+Often it is not necessary to model the ionic currents of a cell with the accuracy and complexity inherent in the biophysically based models.  With a view to investigating phenomena on a larger spatial and temporal scale, several ionic current models have been developed that do not seek to model subcellular processes but only to provide an action potential at a minimal computational cost. 
+</para>
+
+<para>
+The FitzHugh-Nagumo model (1961) is based on the cubic excitation model (see <ulink url="${HTML_EXMPL_HMN_SIMPLE}">The Polynomial Model, 1975</ulink>), but it also includes a recovery variable so both depolarisation and repolarisation can be modelled.  In 1994, Rogers and McCulloch modified the original model to generate a more realistic action potential.  The velocity of the upstroke was increased and the large hyperpolarisation at the end of the recovery phase was removed.  The model parameters were also updated.  In 1996, this form of the already modified FitzHugh_Nagumo model was further updated by Aliev and Panfilov.  They altered the equation which modelled the change of the recovery variable to provide a more realistic restitution period and to allow for reentrant phenomena.
+</para>
+
+<para>
+The complete original paper references are cited below:
+</para>
+
+<para>
+Impulses and physiological states in theoretical models of nerve membrane, FitzHugh, R.A., 1961, <ulink url="http://www.biophysj.org/">
+            <emphasis>Biophys. J.</emphasis>
+          </ulink>, 1, 445-466.  
+</para>
+
+<para>
+An active pulse transmission line simulating nerve axon, Nagumo, J., Animoto, S., Yoshizawa, S., 1962, <emphasis>Proc. Inst. Radio Engineers</emphasis>, 50, 2061-2070.
+</para> 
+
+<para>
+A collocation-Galerkin finite element model of cardiac action potential propagation, Rogers, J.M., McCulloch, A.D., 1994a, <ulink url="http://www.ieee.org/organizations/pubs/pub_preview/bme_toc.html">
+            <emphasis>IEEE Trans. Biomed. Eng.</emphasis>
+          </ulink>, 41, 743-757.  
+</para>
+
+<para>
+A simple two-variable model of cardiac excitation, Aliev, R.R. and Panfilov, A.V., 1996, <ulink url="http://www.theo-physik.uni-kiel.de/theo-physik/schuster/contents/csf95.html#7_2">
+            <emphasis>Chaos, Solitons and Fractals</emphasis>
+          </ulink>, 7, 293-301.  <ulink url="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=8796189&amp;dopt=Abstract">PubMed ID: 8796189</ulink>
+</para>
+
+<para>
+The raw CellML description of the simplified cardiac myocyte models can be downloaded in various formats as described in <xref linkend="sec_download_this_model"/>.  For an example of a more complete documentation for an electrophysiological model, see <ulink url="${HTML_EXMPL_HHSA_INTRO}">The Hodgkin-Huxley Squid Axon Model, 1952</ulink>. 
+</para>
+
+</sect1>
+</article>
+</documentation>
+  
+  
+  <!--
+    Below, we define some additional units for association with variables and
+    constants within the model. The identifiers are fairly self-explanatory.
+  -->
+  
+  <units name="millisecond">
+    <unit units="second" prefix="milli"/>
+  </units>
+  
+  <units name="per_millisecond">
+    <unit units="second" prefix="milli" exponent="-1"/>
+  </units>
+  
+  <units name="millivolt">
+    <unit units="volt" prefix="milli"/>
+  </units>
+  
+  <units name="microA_per_mm2">
+    <unit units="ampere" prefix="micro"/>
+    <unit units="metre" prefix="milli" exponent="-2"/>
+  </units>
+  
+  <units name="microF_per_mm2">
+    <unit units="farad" prefix="micro"/>
+    <unit units="metre" prefix="milli" exponent="-2"/>
+  </units>
+  
+  <!--
+    The "environment" component is used to declare variables that are used by
+    all or most of the other components, in this case just "time".
+  -->
+  <component name="environment">
+    <variable units="millisecond" public_interface="out" name="time"/>
+  </component>
+  
+  <component name="membrane">
+    <variable units="dimensionless" public_interface="out" name="u"/>
+    <variable units="millivolt" public_interface="out" name="Vr" initial_value="-85.0"/>
+    <variable units="millivolt" public_interface="out" name="Vth" initial_value="-75.0"/>
+    <variable units="millivolt" public_interface="out" name="Vp" initial_value="15.0"/>
+    
+    <variable units="microF_per_mm2" name="Cm" initial_value="0.01"/>
+    <variable units="millivolt" name="Vm"/>
+    
+    <variable units="microA_per_mm2" public_interface="in" name="I_ion"/>
+    <variable units="millisecond" public_interface="in" name="time"/>
+    
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply id="Vm_diff_eq">
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci> time </ci>
+          </bvar>
+          <ci> Vm </ci>
+        </apply>
+        <apply>
+          <divide/>
+          <apply>
+            <minus/>
+            <ci> I_ion </ci>
+          </apply>
+          <ci> Cm </ci>
+        </apply>
+      </apply>
+              
+      <apply id="u_calculation">
+        <eq/>
+        <ci> u </ci>
+        <apply>
+          <divide/>
+          <apply>
+            <minus/>
+            <ci> Vm </ci>
+            <ci> Vr </ci>
+          </apply>
+          <apply>
+            <minus/>
+            <ci> Vp </ci>
+            <ci> Vr </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component> 
+      
+  <component name="ionic_current">
+    <variable units="microA_per_mm2" public_interface="out" name="I_ion"/>
+    
+    <variable units="dimensionless" name="alpha"/>
+    <variable units="microA_per_mm2" name="c1" initial_value="0.175"/>
+    <variable units="microA_per_mm2" name="c2" initial_value="0.03"/>
+    
+    <variable units="dimensionless" public_interface="in" name="v"/>
+    <variable units="dimensionless" public_interface="in" name="u"/>
+    <variable units="millivolt" public_interface="in" name="Vr"/>
+    <variable units="millivolt" public_interface="in" name="Vth"/>
+    <variable units="millivolt" public_interface="in" name="Vp"/>
+    <variable units="millisecond" public_interface="in" name="time"/>     
+      
+    <math xmlns="http://www.w3.org/1998/Math/MathML">   
+      <apply id="alpha_calculation">
+        <eq/>
+        <ci> alpha </ci>
+        <apply>
+          <divide/>
+          <apply>
+            <minus/>
+            <ci> Vth </ci>
+            <ci> Vr </ci>
+          </apply>
+          <apply>
+            <minus/>
+            <ci> Vp </ci>
+            <ci> Vr </ci>
+          </apply>
+        </apply>
+      </apply>
+      
+      <apply id="I_ion_calculation">
+        <eq/>
+        <ci> I_ion </ci>
+        <apply>
+          <plus/>
+          <apply>
+            <times/>
+            <ci> c1 </ci>
+            <ci> u </ci>
+            <apply>
+              <minus/>
+              <ci> u </ci>
+              <ci> alpha </ci>
+            </apply>
+            <apply>
+              <minus/>
+              <ci> u </ci>
+              <cn cellml:units="dimensionless"> 1.0 </cn>
+            </apply>
+          </apply>
+          <apply>
+            <times/>
+            <ci> c2 </ci>
+            <ci> v </ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component> 
+  
+  <component name="recovery_variable">
+    <variable units="dimensionless" public_interface="out" name="v"/>
+    
+    <variable units="per_millisecond" name="b" initial_value="0.011"/>
+    <variable units="dimensionless" name="d" initial_value="0.55"/>
+    
+    <variable units="dimensionless" public_interface="in" name="u"/>
+    <variable units="millisecond" public_interface="in" name="time"/>     
+      
+    <math xmlns="http://www.w3.org/1998/Math/MathML">   
+      <apply id="v_diff_eq">
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci> time </ci>
+          </bvar>
+          <ci> v </ci>
+        </apply>
+        <apply>
+          <times/>
+          <ci> b </ci>
+          <apply>
+            <minus/>
+            <ci> u </ci>
+            <apply>
+              <times/>
+              <ci> d </ci>
+              <ci> v </ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component> 
+      
+  <connection>
+    <map_components component_2="environment" component_1="membrane"/>
+    <map_variables variable_2="time" variable_1="time"/>
+  </connection>
+  
+  <connection>
+    <map_components component_2="environment" component_1="ionic_current"/>
+    <map_variables variable_2="time" variable_1="time"/>
+  </connection>
+  
+  <connection>
+    <map_components component_2="environment" component_1="recovery_variable"/>
+    <map_variables variable_2="time" variable_1="time"/>
+  </connection>
+  
+  <connection>
+    <map_components component_2="ionic_current" component_1="membrane"/>
+    <map_variables variable_2="u" variable_1="u"/>
+    <map_variables variable_2="Vr" variable_1="Vr"/>
+    <map_variables variable_2="Vth" variable_1="Vth"/>
+    <map_variables variable_2="Vp" variable_1="Vp"/>
+    <map_variables variable_2="I_ion" variable_1="I_ion"/>
+  </connection>
+  
+  <connection>
+    <map_components component_2="recovery_variable" component_1="membrane"/>
+    <map_variables variable_2="u" variable_1="u"/>
+  </connection>
+  
+  <connection>
+    <map_components component_2="recovery_variable" component_1="ionic_current"/>
+    <map_variables variable_2="v" variable_1="v"/>
+  </connection>
+  
+
+
+
+
+<rdf:RDF>
+    <rdf:Bag rdf:ID="http://4suite.org/rdf/anonymous/97980b62-d44e-4009-b240-a1a1951f67c2">
+      <rdf:li>Myocyte</rdf:li>
+      <rdf:li>cardiac</rdf:li>
+      <rdf:li>electrophysiology</rdf:li>
+      <rdf:li>simplified model</rdf:li>
+    </rdf:Bag>
+    <rdf:Seq rdf:ID="http://4suite.org/rdf/anonymous/citationAuthorsSeq">
+      <rdf:li>http://4suite.org/rdf/anonymous/author1Vcard</rdf:li>
+    </rdf:Seq>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/a737a1ab-72f1-42c7-a71d-5a6a1cdbca9c">
+      <dc:creator rdf:resource="http://4suite.org/rdf/anonymous/dbeafa33-8b12-4708-b730-4e74656b99c8"/>
+      <dc:title>
+            An active pulse transmission line simulating nerve axon 
+          </dc:title>
+      <bqs:volume>50</bqs:volume>
+      <bqs:first_page>2061</bqs:first_page>
+      <bqs:Journal rdf:resource="http://4suite.org/rdf/anonymous/68bb6384-2718-4a42-a561-3529c1189620"/>
+      <dcterms:issued rdf:resource="http://4suite.org/rdf/anonymous/f7373282-6e20-44a5-8e94-2a648be9d8a3"/>
+      <bqs:last_page>2070</bqs:last_page>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/371cc23f-c288-443c-b0c1-c5651f2d3df9">
+      <bqs:JournalArticle rdf:resource="http://4suite.org/rdf/anonymous/48839d98-2a08-4a5a-8058-44ec393d2ee7"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/cbdbd49f-e4fc-490b-bf80-ca5c10334a9e">
+      <vCard:Given>Catherine</vCard:Given>
+      <vCard:Family>Lloyd</vCard:Family>
+      <vCard:Other>May</vCard:Other>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/146bcd5a-d421-4268-8a14-d864a84dc13a">
+      <vCard:N rdf:resource="http://4suite.org/rdf/anonymous/255541b7-46a9-457c-8960-cbffd0774566"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/c258c89f-932b-4b01-953c-54443d69cd11">
+      <vCard:Given>Catherine</vCard:Given>
+      <vCard:Family>Lloyd</vCard:Family>
+      <vCard:Other>May</vCard:Other>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/author1Vcard">
+      <rdf:type>http://www.cellml.org/bqs/1.0#Person</rdf:type>
+      <vCard:N>http://4suite.org/rdf/anonymous/author1VcardN</vCard:N>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/3356af66-73a9-4d5d-8c5e-bce4b7b33c56">
+      <dcterms:W3CDTF>1961-01-01</dcterms:W3CDTF>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/19af1421-6912-4aee-b20b-129f625b1134">
+      <vCard:ORG rdf:resource="http://4suite.org/rdf/anonymous/40c950b1-a219-48e0-b61c-2880780f10f3"/>
+      <vCard:EMAIL rdf:resource="http://4suite.org/rdf/anonymous/d8d583fe-5be8-4b2a-85da-70cf0126ebab"/>
+      <vCard:N rdf:resource="http://4suite.org/rdf/anonymous/cbdbd49f-e4fc-490b-bf80-ca5c10334a9e"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/701d148d-eb9f-4ec3-929d-3bf654b923dc">
+      <vCard:Given>Catherine</vCard:Given>
+      <vCard:Family>Lloyd</vCard:Family>
+      <vCard:Other>May</vCard:Other>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/e4307237-31b7-4cc9-bf2d-fcd60a5063d2">
+      <dcterms:W3CDTF>2002-07-10</dcterms:W3CDTF>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/86dc70b6-fa21-438f-bd37-0ff9b9c33f0c">
+      <dc:creator rdf:resource="http://4suite.org/rdf/anonymous/43d22811-d659-4ab8-8599-2b97915ab2b7"/>
+      <rdf:value>This is the CellML description of the FitzHugh-Nagumo 1961 simplified model of a cardiac myocyte. It is based on the cubic excitation model but also includes a recovery variable so both depolarisation and repolarisation can be modelled.</rdf:value>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/2214da55-25d8-42d6-9955-288bdbf91ac8">
+      <dc:subject rdf:resource="http://4suite.org/rdf/anonymous/5a5bf4e6-cb83-4295-b322-4a88f19b0b96"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/e324b142-0818-4737-bf1c-8c34c619c7f8">
+      <dcterms:W3CDTF>2003-08-11</dcterms:W3CDTF>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/5a5bf4e6-cb83-4295-b322-4a88f19b0b96">
+      <bqs:subject_type>keyword</bqs:subject_type>
+      <rdf:value rdf:resource="http://4suite.org/rdf/anonymous/97980b62-d44e-4009-b240-a1a1951f67c2"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/3cc040ef-7b22-4d08-b76f-ee853957c612">
+      <dcterms:W3CDTF>2001-12-28</dcterms:W3CDTF>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/dbeafa33-8b12-4708-b730-4e74656b99c8">
+      <bqs:Person rdf:resource="http://4suite.org/rdf/anonymous/0e219dd4-88b5-4dea-aedc-d9812fb294ca"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/f0efa92c-110e-4dae-bcf9-62a5669b5519">
+      <dcterms:modified rdf:resource="http://4suite.org/rdf/anonymous/1bfe6efc-c96d-4051-b1f5-c5e00f77f304"/>
+      <rdf:value>
+          Updated metadata to conform to the 16/1/02 CellML Metadata 1.0 
+          Specification.
+        </rdf:value>
+      <cmeta:modifier rdf:resource="http://4suite.org/rdf/anonymous/146bcd5a-d421-4268-8a14-d864a84dc13a"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/db2773b2-d627-4fb4-bb81-c55c1c789658">
+      <vCard:N rdf:resource="http://4suite.org/rdf/anonymous/c258c89f-932b-4b01-953c-54443d69cd11"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/43d22811-d659-4ab8-8599-2b97915ab2b7">
+      <vCard:FN>Catherine Lloyd</vCard:FN>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/68bb6384-2718-4a42-a561-3529c1189620">
+      <dc:title>Biophysical Journal</dc:title>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/c067cc1c-2740-4c0b-8ba5-c82f9d0cdc01">
+      <vCard:Given>R.A.</vCard:Given>
+      <vCard:Family>Fitzhugh</vCard:Family>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/75dba408-3612-49fe-95db-f71ba679d7f9">
+      <vCard:Given>Catherine</vCard:Given>
+      <vCard:Family>Lloyd</vCard:Family>
+      <vCard:Other>May</vCard:Other>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/c3d4a456-2cf2-4783-ac73-8cd1415d3c66">
+      <dcterms:W3CDTF>2002-01-03</dcterms:W3CDTF>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/48839d98-2a08-4a5a-8058-44ec393d2ee7">
+      <dc:creator>http://4suite.org/rdf/anonymous/citationAuthorsSeq</dc:creator>
+      <dc:title>Impulses and physiological states in theoretical models of nerve membrane</dc:title>
+      <bqs:volume>1</bqs:volume>
+      <bqs:first_page>445</bqs:first_page>
+      <bqs:Journal rdf:resource="http://4suite.org/rdf/anonymous/33b335c7-36e4-40d9-aaca-106efd4018ed"/>
+      <dcterms:issued rdf:resource="http://4suite.org/rdf/anonymous/3356af66-73a9-4d5d-8c5e-bce4b7b33c56"/>
+      <bqs:last_page>466</bqs:last_page>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/eb526d0c-23b0-4930-9ec1-feb9ec642747">
+      <bqs:Pubmed_id>7927397</bqs:Pubmed_id>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/255541b7-46a9-457c-8960-cbffd0774566">
+      <vCard:Given>Autumn</vCard:Given>
+      <vCard:Family>Cuellar</vCard:Family>
+      <vCard:Other>A.</vCard:Other>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/87dc2d65-75dc-46c1-bbd4-b0afc68ff8b4">
+      <vCard:N rdf:resource="http://4suite.org/rdf/anonymous/fef211fd-97c8-4413-a537-6438e9eec0fa"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/efbbd2b1-3966-451c-807d-9de3937ca5c8">
+      <dcterms:W3CDTF>2002-02-25</dcterms:W3CDTF>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/fef211fd-97c8-4413-a537-6438e9eec0fa">
+      <vCard:Given>Catherine</vCard:Given>
+      <vCard:Family>Lloyd</vCard:Family>
+      <vCard:Other>May</vCard:Other>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/675e7956-00c5-4169-b556-4f616bad65d4">
+      <bqs:JournalArticle rdf:resource="http://4suite.org/rdf/anonymous/a737a1ab-72f1-42c7-a71d-5a6a1cdbca9c"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.cellml.org/models/fitzhugh_1961_version01">
+      <dc:publisher>
+        The University of Auckland, Bioengineering Research Group
+      </dc:publisher>
+      <cmeta:modification>http://4suite.org/rdf/anonymous/8075431f-c98a-431b-ae04-90c6f4346286</cmeta:modification>
+      <cmeta:modification>http://4suite.org/rdf/anonymous/9103a51c-f08d-4b9d-b364-ad3db2b1ead1</cmeta:modification>
+      <cmeta:modification>http://4suite.org/rdf/anonymous/acfa286d-bef4-42ff-ab6c-0a9e76e53ac3</cmeta:modification>
+      <cmeta:modification>http://4suite.org/rdf/anonymous/c8dc2466-7c83-4b30-8fe5-dbd33948658d</cmeta:modification>
+      <cmeta:modification>http://4suite.org/rdf/anonymous/f0efa92c-110e-4dae-bcf9-62a5669b5519</cmeta:modification>
+      <dcterms:created>http://4suite.org/rdf/anonymous/3cc040ef-7b22-4d08-b76f-ee853957c612</dcterms:created>
+      <dc:creator>http://4suite.org/rdf/anonymous/19af1421-6912-4aee-b20b-129f625b1134</dc:creator>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/33b335c7-36e4-40d9-aaca-106efd4018ed">
+      <dc:title>Biophysical Journal</dc:title>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/d8d583fe-5be8-4b2a-85da-70cf0126ebab">
+      <rdf:type rdf:resource="http://imc.org/vCard/3.0#internet"/>
+      <rdf:value>c.lloyd@auckland.ac.nz</rdf:value>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/f7373282-6e20-44a5-8e94-2a648be9d8a3">
+      <dcterms:W3CDTF>1962</dcterms:W3CDTF>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/40c950b1-a219-48e0-b61c-2880780f10f3">
+      <vCard:Orgname>The University of Auckland</vCard:Orgname>
+      <vCard:Orgunit>The Bioengineering Research Group</vCard:Orgunit>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/author1VcardN">
+      <vCard:Given>R.A.</vCard:Given>
+      <vCard:Family>Fitzhugh</vCard:Family>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/99b94fa2-bd74-430d-8825-0259fabe777f">
+      <rdf:value>
+          The original FitzHugh and Nagumo papers are relatively old (1961 and 
+          1962) and are not available in the Pubmed database.  However, more 
+          recent publications of the FitzHugh-Nagumo model such as Rogers and 
+          McCulloch (1994a) and Aliev and Panfilov (1996), are referenced below 
+          (respectively).
+        </rdf:value>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.cellml.org/models/nagumo_1961_version01#nagumo_1961_version01">
+      <dc:title>
+        The FitzHugh-Nagumo 1961 Simplified Model of a Cardiac Myocyte
+      </dc:title>
+      <cmeta:bio_entity>Cardiac Myocyte</cmeta:bio_entity>
+      <cmeta:comment>http://4suite.org/rdf/anonymous/86dc70b6-fa21-438f-bd37-0ff9b9c33f0c</cmeta:comment>
+      <cmeta:comment>http://4suite.org/rdf/anonymous/99b94fa2-bd74-430d-8825-0259fabe777f</cmeta:comment>
+      <bqs:reference>http://4suite.org/rdf/anonymous/16080c3e-d52c-4daf-a857-67eab54a31a5</bqs:reference>
+      <bqs:reference>http://4suite.org/rdf/anonymous/2214da55-25d8-42d6-9955-288bdbf91ac8</bqs:reference>
+      <bqs:reference>http://4suite.org/rdf/anonymous/371cc23f-c288-443c-b0c1-c5651f2d3df9</bqs:reference>
+      <bqs:reference>http://4suite.org/rdf/anonymous/675e7956-00c5-4169-b556-4f616bad65d4</bqs:reference>
+      <bqs:reference>http://4suite.org/rdf/anonymous/eb526d0c-23b0-4930-9ec1-feb9ec642747</bqs:reference>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/8075431f-c98a-431b-ae04-90c6f4346286">
+      <dcterms:modified rdf:resource="http://4suite.org/rdf/anonymous/e4307237-31b7-4cc9-bf2d-fcd60a5063d2"/>
+      <rdf:value>
+          Removed Aliev and Panfilov (1996) modifications.  Have now implemented           them in CellML 1.1 component reuse.
+        </rdf:value>
+      <cmeta:modifier rdf:resource="http://4suite.org/rdf/anonymous/db2773b2-d627-4fb4-bb81-c55c1c789658"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/03782508-031a-4e53-ba5d-860e328b9960">
+      <vCard:N rdf:resource="http://4suite.org/rdf/anonymous/701d148d-eb9f-4ec3-929d-3bf654b923dc"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/0f2d6c76-60af-44d8-8334-e45eb0b83ffd">
+      <vCard:N rdf:resource="http://4suite.org/rdf/anonymous/c067cc1c-2740-4c0b-8ba5-c82f9d0cdc01"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/0e219dd4-88b5-4dea-aedc-d9812fb294ca">
+      <vCard:N rdf:resource="http://4suite.org/rdf/anonymous/5a0169ab-9837-4b91-8fac-a10b34d43c21"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/acfa286d-bef4-42ff-ab6c-0a9e76e53ac3">
+      <dcterms:modified rdf:resource="http://4suite.org/rdf/anonymous/e324b142-0818-4737-bf1c-8c34c619c7f8"/>
+      <rdf:value>
+          Separated out equations into different components.
+        </rdf:value>
+      <cmeta:modifier rdf:resource="http://4suite.org/rdf/anonymous/03782508-031a-4e53-ba5d-860e328b9960"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/5a0169ab-9837-4b91-8fac-a10b34d43c21">
+      <vCard:Given>J.</vCard:Given>
+      <vCard:Family>Nagumo</vCard:Family>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/854e0858-a211-4100-be4a-4500aa6cc1e9">
+      <vCard:N rdf:resource="http://4suite.org/rdf/anonymous/75dba408-3612-49fe-95db-f71ba679d7f9"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/c8dc2466-7c83-4b30-8fe5-dbd33948658d">
+      <dcterms:modified rdf:resource="http://4suite.org/rdf/anonymous/efbbd2b1-3966-451c-807d-9de3937ca5c8"/>
+      <rdf:value>
+          Corrected an equation.
+        </rdf:value>
+      <cmeta:modifier rdf:resource="http://4suite.org/rdf/anonymous/854e0858-a211-4100-be4a-4500aa6cc1e9"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/16080c3e-d52c-4daf-a857-67eab54a31a5">
+      <bqs:Pubmed_id>7927397</bqs:Pubmed_id>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/1bfe6efc-c96d-4051-b1f5-c5e00f77f304">
+      <dcterms:W3CDTF>2002-01-21</dcterms:W3CDTF>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/8b3f5c62-4220-4aec-b8c6-6afdb0f41344">
+      <bqs:Person rdf:resource="http://4suite.org/rdf/anonymous/0f2d6c76-60af-44d8-8334-e45eb0b83ffd"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://4suite.org/rdf/anonymous/9103a51c-f08d-4b9d-b364-ad3db2b1ead1">
+      <dcterms:modified rdf:resource="http://4suite.org/rdf/anonymous/c3d4a456-2cf2-4783-ac73-8cd1415d3c66"/>
+      <rdf:value>
+          Added Aliev and Panfilov (1996) modifications.
+        </rdf:value>
+      <cmeta:modifier rdf:resource="http://4suite.org/rdf/anonymous/87dc2d65-75dc-46c1-bbd4-b0afc68ff8b4"/>
+    </rdf:Description>
+  </rdf:RDF>
+</model>
