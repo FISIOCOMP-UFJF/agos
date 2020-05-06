@@ -27,6 +27,6 @@ ADD_SUBDIRECTORY(src/string)
 
 SET(SOURCE_FILES src/main.c src/opts.c src/opts.h src/compile.h  src/fsm.h  src/fsm_util.h  src/lex.h)
 
-ADD_EXECUTABLE(Agos ${SOURCE_FILES})
+ADD_EXECUTABLE(agos ${SOURCE_FILES})
 
-TARGET_LINK_LIBRARIES(Agos ${LIBXML2_LIBRARIES} string)
+TARGET_LINK_LIBRARIES(agos ${LIBXML2_LIBRARIES} string)
