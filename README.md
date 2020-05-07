@@ -42,3 +42,8 @@ You can use gnuplot to plot the results:
 
 `gnuplot> plot 'out.txt' u 1:2 w lines` 
 
+# How to cite:
+----
+
+Ciro B. Barbosa, Rodrigo W. dos Santos, Ronan M. Amorim, Leandro N. Ciuffo, Fairus Manfroi, Rafael S. Oliveira, Fernando O. Campos. A Transformation Tool for ODE Based Models. Part of the Lecture Notes in Computer Science book series (LNCS, volume 3991). https://doi.org/10.1007/11758501_14
+
