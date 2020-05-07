@@ -93,7 +93,7 @@ http://www.CellML.org/
       <variable name="i_NaCa" units="picoA" public_interface="in"/>
       <variable name="i_B_Na" units="picoA" public_interface="in"/>
       <variable name="i_B_Ca" units="picoA" public_interface="in"/>
-      <variable name="stim_start" units="millisecond" initial_value="50"/>
+      <variable name="stim_start" units="millisecond" initial_value="5"/>
       <variable name="stim_end" units="millisecond" initial_value="100000"/>
       <variable name="stim_period" units="millisecond" initial_value="1000"/>
       <variable name="stim_duration" units="millisecond" initial_value="2"/>

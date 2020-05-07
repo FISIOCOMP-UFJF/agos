@@ -121,7 +121,7 @@ A Model of the Ventricular Cardiac Action Potential - Depolarisation, Repolarisa
       <variable name="i_K1" units="microA_per_cm2" public_interface="in"/>
       <variable name="i_Kp" units="microA_per_cm2" public_interface="in"/>
       <variable name="i_b" units="microA_per_cm2" public_interface="in"/>
-      <variable name="stim_start" units="millisecond" initial_value="100"/>
+      <variable name="stim_start" units="millisecond" initial_value="1"/>
       <variable name="stim_end" units="millisecond" initial_value="9000"/>
       <variable name="stim_period" units="millisecond" initial_value="1000"/>
       <variable name="stim_duration" units="millisecond" initial_value="2"/>

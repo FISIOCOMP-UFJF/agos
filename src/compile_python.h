@@ -248,15 +248,15 @@ int print_right_alg_python(FILE *file, AlgList *list, TokenNode *orderedlist, st
         fprintf(file, "\n    calc_%s = ", curalg->eq->token.content);
         cur = curalg->eq;
         cur = cur->next->next;
-        if (strcmp(curalg->eq->token.content, (const char *)"i_Stim") == 0) {
-            fprintf(file, "stim_current");
-        } else {
-            //HACK: we should do this better :)
+//        if (strcmp(curalg->eq->token.content, (const char *)"i_Stim") == 0) {
+//            fprintf(file, "stim_current");
+//        } else {
+//            //HACK: we should do this better :)
             sds tmp = sdsnew("");
             tmp = sdscatfmt(tmp, "calc_%s", curalg->eq->token.content);
 
             print_eq_python(file, NULL, cur, tmp, all_ifs);
-        }
+//        }
 
         curl = curl->next;
     }
@@ -328,8 +328,6 @@ void generate_python_solver(sds model_name) {
         cur = cur->next;
         counter++;
     }
-    fprintf(file, "\n\nstim_start = 2.0;\n"
-                  "stim_dur = 1.0;\n");
 
     // RHS CPU
     fprintf(file, "\n\ndef %s(sv, time_new):\n\n", model_name);

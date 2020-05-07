@@ -110,7 +110,7 @@ http://www.CellML.org/
       <variable name="i_p_K" units="picoA_per_picoF" public_interface="in"/>
       <variable name="i_p_Ca" units="picoA_per_picoF" public_interface="in"/>
       <variable name="i_Stim" units="picoA_per_picoF" public_interface="out"/>
-      <variable name="stim_start" units="millisecond" initial_value="100"/>
+      <variable name="stim_start" units="millisecond" initial_value="1"/>
       <variable name="stim_end" units="millisecond" initial_value="100000"/>
       <variable name="stim_period" units="millisecond" initial_value="1000"/>
       <variable name="stim_duration" units="millisecond" initial_value="1"/>

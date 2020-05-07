@@ -1477,15 +1477,15 @@ int print_right_alg(FILE *file, AlgList *list, TokenNode *orderedlist) {
         fprintf(file, "\n    real calc_%s = ", curalg->eq->token.content);
         cur = curalg->eq;
         cur = cur->next->next;
-        if (strcmp(curalg->eq->token.content, (const char *)"i_Stim") == 0) {
-            fprintf(file, "stim_current");
-        } else {
+//        if (strcmp(curalg->eq->token.content, (const char *)"i_Stim") == 0) {
+//            fprintf(file, "stim_current");
+//        } else {
             //HACK: we should do this better :)
             sds tmp = sdsnew("");
             tmp = sdscatfmt(tmp, "calc_%s", curalg->eq->token.content);
 
             print_eq(file, cur, tmp);
-        }
+       // }
 
         fprintf(file, ";\t//%d", curalg->number);
         curl = curl->next;
