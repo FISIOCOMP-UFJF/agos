@@ -313,6 +313,7 @@ void generate_python_solver(sds model_name) {
                   "from math import exp as expf\n"
                   "from math import pow as powf\n"
                   "from math import floor\n"
+                  "from math import tanh\n"
                   "from sys import argv\n"
                   "from builtins import abs as fabsf\n"
 

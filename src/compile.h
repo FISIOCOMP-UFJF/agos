@@ -713,7 +713,7 @@ void generate_cpu_model(sds model_name) {
 
     // RHS CPU
     fprintf(file,
-            "void RHS_cpu(const real *sv, real *rDY_, real stim_current, real dt) {\n\n");
+            "void RHS_cpu(const real *sv, real *rDY, real stim_current, real dt) {\n\n");
     fprintf(file, "    //State variables\n");
 
     cur = rewind_token_list(difvarlist);
@@ -786,7 +786,7 @@ void generate_cpu_model(sds model_name) {
             "\n"
             "#endif\n"
             "\n"
-            "void RHS_cpu(const real *sv, real *rDY_, real stim_current, real dt);\n"
+            "void RHS_cpu(const real *sv, real *rDY, real stim_current, real dt);\n"
             "inline void solve_forward_euler_cpu_adpt(real *sv, real stim_curr, real final_time, int thread_id);\n"
             "\n"
             "void solve_model_ode_cpu(real dt, real *sv, real stim_current);\n\n");
@@ -1168,7 +1168,7 @@ void generate_gpu_model(sds model_name) {
     cur = rewind_token_list(difvarlist);
     counter = 0;
     while (cur != NULL) {
-        fprintf(file, "    real %s; //%s ", cur->token.content, cur->units);
+        fprintf(file, "    real %s_old_; //%s\n", cur->token.content, cur->units);
         cur = cur->next;
         counter++;
     }
@@ -1178,7 +1178,7 @@ void generate_gpu_model(sds model_name) {
     counter = 0;
     while (cur != NULL) {
         fprintf(file,
-                "        real %s_old_ =  sv[%d];\n", cur->token.content, counter);
+                "        %s_old_ =  sv[%d];\n", cur->token.content, counter);
         cur = cur->next;
         counter++;
     }
@@ -1187,7 +1187,7 @@ void generate_gpu_model(sds model_name) {
     counter = 0;
     while (cur != NULL) {
         fprintf(file,
-                "        %s_old_ =  *((real*)((char*)sv_ + pitch * %d) + "
+                "        %s_old_ =  *((real*)((char*)sv + pitch * %d) + "
                 "thread_id);\n",
                 cur->token.content, counter);
         cur = cur->next;
