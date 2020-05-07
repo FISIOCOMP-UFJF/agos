@@ -1157,7 +1157,7 @@ void generate_gpu_model(sds model_name) {
                   "    DT = dt;\n"
                   "    TIME_NEW = time_new;\n"
                   "    PREVIOUS_DT = previous_dt;\n"
-                  "}\n\n", counter-1, counter, counter+1);
+                  "}\n\n", counter, counter+1, counter+2);
 
 
     // RHS CPU
