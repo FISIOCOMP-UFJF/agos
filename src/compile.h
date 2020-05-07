@@ -859,7 +859,7 @@ void generate_gpu_model(sds model_name) {
                   "__constant__  real reltol;\n"
                   "__constant__  real max_dt;\n"
                   "__constant__  real min_dt;\n"
-                  "__constant__  uint8_t use_adpt;"
+                  "__constant__  uint8_t use_adpt;\n"
                   "size_t pitch_h;"
                   "\n\n");
 
@@ -960,11 +960,11 @@ void generate_gpu_model(sds model_name) {
         counter++;
     }
 
-    fprintf(file, "if(use_adpt) {\n"
+    fprintf(file, "        if(use_adpt) {\n"
                   "            *((real *)((char *)sv + pitch * %d) + threadID) = min_dt; // dt\n"
                   "            *((real *)((char *)sv + pitch * %d) + threadID) = 0.0;    // time_new\n"
                   "            *((real *)((char *)sv + pitch * %d) + threadID) = 0.0;    // previous dt\n"
-                  "        }", counter, counter+1, counter+2);
+                  "        }\n", counter, counter+1, counter+2);
 
     fprintf(file, "    }\n"
             "}\n\n");
