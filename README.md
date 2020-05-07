@@ -1,13 +1,13 @@
 # agos
 Cellml to code converter
 
-#Compile
+# Compile
 
 `cmake .`
 
 `make`
 
-#Run
+# Run
 `./bin/agos -i cellml/model.cellml -o model -s -l python`
 
 This will generate a single cell solver for the model. To run the solver:
@@ -32,7 +32,7 @@ to run the solver:
 
 `./model [simulation_time]`
 
-#Results
+# Results
 
 The model state variables will be saved in a file named out.txt
 
