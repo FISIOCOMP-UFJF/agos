@@ -400,7 +400,7 @@ void generate_python_solver(sds model_name) {
 
     printf("\n[INFO] To run the single cell solver you will need scipy and pylab:\n");
     printf("[INFO] python %s final_time\n", filename);
-    printf("[INFO] Ex: python %s 1000 will run a simulations with 1000 ms\n", filename);
+    printf("[INFO] Ex: python %s 1000 will run a simulations with 1000 ms\n\n", filename);
 
     printf("[INFO] The model state variables will be saved in a file named out.txt\n\n");
     printf("[INFO] You can use gnuplot to plot the results: \n");
