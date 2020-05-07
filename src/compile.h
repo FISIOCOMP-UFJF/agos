@@ -1,7 +1,6 @@
 #ifndef _COMPILE_H_
 #define _COMPILE_H_
 #include "fsm.h"
-#include <string.h>
 #include "string/sds.h"
 
 int print_diff(FILE *file, DiffList *list);
@@ -62,6 +61,7 @@ int print_if(FILE *file, IfList *list) {
     }
     return 0;
 }
+
 int print_diff(FILE *file, DiffList *list) {
     if (file == NULL) {
         printf("ERROR - Can't write in file, print_diff");
@@ -104,11 +104,15 @@ int print_diff_cvode(FILE *file, DiffList *list) {
     return 0;
 }
 
+
+
 int print_eq(FILE *file, TokenNode *t, char *left_token_name) {
+
     if (file == NULL) {
         printf("ERROR - Can't write in file, print_alg");
         exit(1);
     }
+
     TokenNode *cur = t;
     while (cur != NULL) {
         if (list_has_var(cur->token, algvarlist)) {
@@ -308,7 +312,6 @@ void fix(xmlNode *root, AlgList *list) {
             name = name->next;
         }
         if (name != NULL) {
-            // printf("--------%s\n",name->children->content);
             cname = (char *)xmlNodeGetContent((xmlNode *)name);
         }
         if (dpllist != NULL)
@@ -347,24 +350,7 @@ void change_duplicated_equations(int eqnumber, int bottom, int top, char *cname)
     Token t;
     t.content = newname;
     algvarlist = attach_token(t, algvarlist);
-    /*
-    xmlNode *var = comp;
-    while((var = get_variable(var)) != NULL)
-    {
-        xmlAttr *attr = var->properties;
-        while(attr != NULL)
-        {
-            if(!strcmp((char*)attr->name, "name"))
-                break;
-            attr = attr->next;
-        }
-        if(attr != NULL)
-        {
-            attr->children->content = (xmlChar*)newname;
-            break;
-        }
-    }
-    */
+
     alg = rewind_alg_list(alglist);
 
     while (alg != NULL) {
@@ -1220,13 +1206,7 @@ void generate_gpu_model(sds model_name) {
     sdsfree(filename);
 }
 
-void generate_single_cell_solver(sds model_name) {
-
-    if (eq_counter <= 0) {
-        printf("ERROR - Equation not found\n");
-        exit(1);
-    }
-
+static void generate_c_solver(sds model_name) {
     preced_alg_list = create_preced_alg_list(rewind_alg_list(alglist));
     AlgList *cural;
     TokenNode *resolved_dep_list = NULL;
@@ -1292,24 +1272,33 @@ void generate_single_cell_solver(sds model_name) {
     }
     fprintf(file, "}\n\n");
 
+//    fprintf(file, "#define NEQ %d\n"
+//                  "typedef realtype real;\n"
+//                  "\n"
+//                  "\n"
+//                  "realtype stim_start = 2.0;\n"
+//                  "realtype stim_dur = 1.0;\n"
+//                  "realtype stim_current;",
+//                  counter);
+
     fprintf(file, "#define NEQ %d\n"
                   "typedef realtype real;\n"
                   "\n"
-                  "\n"
-                  "realtype stim_start = 2.0;\n"
-                  "realtype stim_dur = 1.0;\n"
-                  "realtype stim_current;", counter);
+                  "\n",
+                  counter);
+
+
 
     print_if(file, iflist);
 
     // RHS CPU
-    fprintf(file, "\n\n static int %s(realtype t, N_Vector sv, N_Vector rDY, void *f_data) {\n\n", model_name);
-    fprintf(file, "stim_current = 0.0;\n"
-                  "\n"
-                  "\tif(t <= stim_start + stim_dur) {\n"
-                  "\t\tstim_current = -53;\n"
-                  "\t}\n"
-                  "");
+    fprintf(file, "\n\n static int %s(realtype time_new, N_Vector sv, N_Vector rDY, void *f_data) {\n\n", model_name);
+//    fprintf(file, "stim_current = 0.0;\n"
+//                  "\n"
+//                  "\tif(t <= stim_start + stim_dur) {\n"
+//                  "\t\tstim_current = -53;\n"
+//                  "\t}\n"
+//                  "");
 
     fprintf(file, "    //State variables\n");
     cur = rewind_token_list(difvarlist);
@@ -1383,7 +1372,7 @@ void generate_single_cell_solver(sds model_name) {
                   "    if(check_flag(&flag, \"CVodeInit\", 1))\n"
                   "        return;\n"
                   "\n"
-                  "    flag = CVodeSStolerances(cvode_mem, 1.49012e-8, 1.49012e-8);\n"
+                  "    flag = CVodeSStolerances(cvode_mem, 1.49012e-6, 1.49012e-6);\n"
                   "    if(check_flag(&flag, \"CVodeSStolerances\", 1))\n"
                   "        return;\n"
                   "\n"
@@ -1452,6 +1441,20 @@ void generate_single_cell_solver(sds model_name) {
 
 
     fclose(file);
+
+    printf("\n[INFO] To compile the single cell solver:\n");
+    printf("[INFO] gcc %s -o model -lm -lsundials_cvode\n\n", filename);
+    printf("[INFO] To run the single cell solver\n");
+    printf("[INFO] ./model final_time.\n");
+    printf("[INFO] Ex: ./model 1000 will run a simulations with 1000 ms\n\n");
+
+    printf("[INFO] The model state variables will be saved in a file named out.txt\n");
+    printf("[INFO] You can use gnuplot to plot the results: \n");
+    printf("[INFO] gnuplot> plot 'out.txt' u 1:2 w lines \n\n");
+
+
+
+
     sdsfree(filename);
 }
 
@@ -1490,5 +1493,6 @@ int print_right_alg(FILE *file, AlgList *list, TokenNode *orderedlist) {
     fprintf(file, "\n");
     return 0;
 }
+
 
 #endif //_COMPILE_H_

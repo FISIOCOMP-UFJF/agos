@@ -27,7 +27,7 @@ typedef struct node_ {
     double	initialvalue;
     struct node_ *next;
     struct node_ *prev;
-}TokenNode;
+} TokenNode;
 
 // struct that holds the differential equation header
 typedef struct c_diff_ {
@@ -280,7 +280,7 @@ IfList* rewind_if_list(IfList *list)
 /* rewind_list ****************************************************************
  * Returns the first element in a TokenList                                   *
  * ***************************************************************************/
-
+//TODO: make a linked list with a descriptor
 TokenNode* rewind_token_list(TokenNode *list)
 {
     TokenNode *cur = list;

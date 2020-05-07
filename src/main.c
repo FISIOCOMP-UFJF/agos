@@ -1,10 +1,10 @@
 #include "compile.h"
+#include "compile_python.h"
 #include "opts.h"
 
 int main(int argc, char **argv) {
 	xmlDoc *doc = NULL;
 	xmlNode *root_element = NULL;
-
 
 	struct options opts;
 
@@ -15,18 +15,9 @@ int main(int argc, char **argv) {
         opts.output_name = get_filename_without_ext(tmp);
         free(tmp);
     }
-
-
-
-    if(argc != 3)
-	{
-		fprintf(stderr, "Builder [cellml-file] [model-name]\n");
-		exit(1);
-	}
-	
 	
 	LIBXML_TEST_VERSION
-	doc = xmlReadFile (argv[1], NULL, 0);
+	doc = xmlReadFile (opts.input_file, NULL, 0);
 	
 	if (doc == NULL)
 	{
@@ -52,12 +43,26 @@ int main(int argc, char **argv) {
 	// building param list and associating initial values
 	initial_values(root_element);
 	fix_duplicate_equations(root_element, alglist);
-    sds modelname = sdsnew(argv[2]);
-    sds modelname2 = sdsnew(argv[2]);
-    sds modelname3 = sdsnew(argv[2]);
-    generate_cpu_model(modelname);
-    generate_gpu_model(modelname2);
-    generate_single_cell_solver(modelname3);
+
+	sds modelname = sdsnew(opts.output_name);
+	sds modelname2 = sdsnew(opts.output_name);
+	sds modelname3 = sdsnew(opts.output_name);
+
+    if(strcasecmp(opts.single_cell_lang, "c") == 0) {
+        generate_c_solver(modelname);
+    }
+    else if(strcasecmp(opts.single_cell_lang, "python") == 0) {
+        generate_python_solver(modelname);
+    }
+    else {
+        fprintf(stderr, "[ERR] Language %s not supported!\n", opts.single_cell_lang);
+        fprintf(stderr, "[ERR] Supported languages are: c or python!\n");
+    }
+
+    if(!opts.single_cell_only) {
+        generate_cpu_model(modelname2);
+        generate_gpu_model(modelname3);
+    }
 
     sdsfree(modelname);
     sdsfree(modelname2);

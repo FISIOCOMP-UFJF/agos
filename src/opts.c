@@ -52,6 +52,10 @@ void parse_options(int argc, char **argv, struct options *options) {
 
     int opt = 0;
     int option_index;
+
+    if(argc == 1) {
+        display_usage(argv);
+    }
     opt = getopt_long_only(argc, argv, conversion_opt_string, long_conversion_options, &option_index);
 
     options->input_file = NULL;
@@ -84,6 +88,11 @@ void parse_options(int argc, char **argv, struct options *options) {
         }
 
         opt = getopt_long(argc, argv, conversion_opt_string, long_conversion_options, &option_index);
+    }
+
+
+    if(options->input_file == NULL) {
+        display_usage(argv);
     }
 
 

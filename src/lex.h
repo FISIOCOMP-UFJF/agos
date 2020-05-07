@@ -372,7 +372,7 @@ Token get_token(xmlNode *ptr) {
         double teste = strtod(node_content, NULL);
         char strteste[255];
         if(!e_notation)
-            sprintf(strteste, "%.15ef", teste);
+            sprintf(strteste, "%.15e", teste);
         else {
             if(cur && cur->content) {
                 long exp = strtol((char*)cur->content, NULL, 10);
@@ -382,7 +382,7 @@ Token get_token(xmlNode *ptr) {
                     sprintf(strteste, "%lfe-0%ld", teste, labs(exp));
             }
             else {
-                sprintf(strteste, "%.15ef", teste);
+                sprintf(strteste, "%.15e", teste);
             }
         }
         token.content = strNoSpace((char *) strteste);
@@ -391,11 +391,11 @@ Token get_token(xmlNode *ptr) {
         // CONSTANTS //////////////////////////////////////////////////////////
     else if (!strcmp((char *) ptr->name, "pi")) {
         token.tag = (char *) ptr->name;
-        token.content = (char *) "3.141592653589793116f";
+        token.content = (char *) "3.141592653589793116";
         token.type = NUMB;
     } else if (!strcmp((char *) ptr->name, "exponentiale")) {
         token.tag = (char *) ptr->name;
-        token.content = (char *) "2.718281828459045091f";
+        token.content = (char *) "2.718281828459045091";
         token.type = NUMB;
     } else if (!strcmp((char *) ptr->name, "true")) {
         token.tag = (char *) ptr->name;
