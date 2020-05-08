@@ -209,11 +209,11 @@ Token get_token(xmlNode *ptr) {
         token.tag = (char *) ptr->name;
         token.type = MATH;
     } else if (!strcmp((char *) ptr->name, "power")) {
-        token.content = "powf(";
+        token.content = "pow(";
         token.tag = (char *) ptr->name;
         token.type = P_OP;
     } else if (!strcmp((char *) ptr->name, "exp")) {
-        token.content = (char *) "expf(";
+        token.content = (char *) "exp(";
         token.tag = (char *) ptr->name;
         token.type = P_OP;
     } else if (!strcmp((char *) ptr->name, "floor")) {
@@ -225,7 +225,7 @@ Token get_token(xmlNode *ptr) {
         token.tag = (char *) ptr->name;
         token.type = L_OP;
     } else if (!strcmp((char *) ptr->name, "ln")) {
-        token.content = (char *) "logf(";
+        token.content = (char *) "log(";
         token.tag = (char *) ptr->name;
         token.type = P_OP;
     } else if (!strcmp((char *) ptr->name, "log")) {
@@ -333,7 +333,7 @@ Token get_token(xmlNode *ptr) {
         token.tag = (char *) ptr->name;
         token.type = P_OP;
     } else if (!strcmp((char *) ptr->name, "abs")) {
-        token.content = (char *) "fabsf(";
+        token.content = (char *) "fabs(";
         token.tag = (char *) ptr->name;
         token.type = P_OP;
     }
@@ -460,7 +460,7 @@ Token get_token(xmlNode *ptr) {
         token.content = (char *) "||";
         token.type = L_OP;
     } else if (!strcmp((char *) ptr->name, "root")) {
-        token.content = (char *) "powf(";
+        token.content = (char *) "pow(";
         token.tag = (char *) ptr->name;
         token.type = ROOT;
     } else if (!strcmp((char *) ptr->name, "not")) {

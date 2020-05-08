@@ -309,14 +309,9 @@ void generate_python_solver(sds model_name) {
 
     file = fopen(filename, "w");
     fprintf(file, "from scipy.integrate import odeint\n"
-                  "from math import log as logf\n"
-                  "from math import exp as expf\n"
-                  "from math import pow as powf\n"
                   "from math import floor\n"
                   "from math import tanh\n"
                   "from sys import argv\n"
-                  "from builtins import abs as fabsf\n"
-
                   "\n");
 
     // SET INITIAL CONDITIONS CPU
