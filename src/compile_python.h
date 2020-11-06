@@ -311,8 +311,13 @@ void generate_python_solver(sds model_name) {
     fprintf(file, "from scipy.integrate import odeint\n"
                   "from math import floor\n"
                   "from math import tanh\n"
+                  "from math import log\n"
+                  "from math import exp\n"
                   "from sys import argv\n"
                   "\n");
+
+    fprintf(file, "def fabs(a):\n"
+                  "    return abs(a)\n\n");
 
     // SET INITIAL CONDITIONS CPU
     fprintf(file,

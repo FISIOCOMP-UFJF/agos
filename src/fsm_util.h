@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////
 
 // STRUCTS ////////////////////////////////////////////////////////////////////
-typedef struct _token_ {
+typedef struct token_t {
     int		type;
     char	*tag;
     char	*content;
@@ -102,7 +102,7 @@ TokenNode*	create_param_list(TokenNode *avlist,TokenNode *dlist, TokenNode *alis
 int 		get_list_size(TokenNode *list);
 
 AlgList*	create_preced_alg_list(AlgList *list);
-AlgList *delete_from_list(AlgList *list, Token t);	// deleta o elemento atual da lista
+AlgList *delete_from_list(AlgList *list, Token t);
 bool	is_list_equal(TokenNode* list1, TokenNode *list2);
 
 
@@ -366,13 +366,9 @@ AlgList* create_preced_alg_list(AlgList *list) {
                     //printf("%s ", cur_eq->token.content);
                 }
             }
-            // achou um IF tenta achar alguma precedencia dentro do IF
-            // talvez seja melhor depois fazer toda essa funcao como recursiva por causa de ifs aninhados
             if(cur_eq->token.type == PI_W){
-                //printf("%s \\%d\n", cur_eq->token.content, cur->number);
-                // buscando o if atual na lista de ifs
                 IfList *cur_if = rewind_if_list(iflist);
-                while(cur_if != NULL && cur_if->ifheader->if_counter != atoi(cur_eq->token.content))
+                while(cur_if != NULL && cur_if->ifheader->if_counter != strtol(cur_eq->token.content, NULL, 10))
                     cur_if = cur_if->next;
 
                 TokenNode *cur_eq_aux = cur_eq;

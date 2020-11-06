@@ -41,7 +41,6 @@
 
 // GLOBAL VARS ////////////////////////////////////////////////////////////////
 xmlNode *pointer;
-xmlNode *prev_pointer;
 
 int lex_index = -1;
 int lex_index_bound = STACK_SIZE;
@@ -101,8 +100,6 @@ Token lex() {
             token.type = END;
         }
     } else {
-        prev_pointer = pointer;
-        // ignoring text nodes
         while (pointer->type == XML_TEXT_NODE) {
             pointer = pointer->next;
             if (pointer == NULL)
@@ -185,7 +182,7 @@ Token get_token(xmlNode *ptr) {
         token.content = (char *) "+";
         token.tag = (char *) ptr->name;
         token.type = I_OP;
-    } else if (!strcmp((char *) ptr->name, "divide")) {
+    } else if (!strcmp((char *) ptr->name, "divide") || !strcmp((char *) ptr->name, "quotient")) {
         token.content = (char *) "/";
         token.tag = (char *) ptr->name;
         token.type = I_OP;
@@ -197,10 +194,6 @@ Token get_token(xmlNode *ptr) {
         token.content = (char *) "-";
         token.tag = (char *) ptr->name;
         token.type = PIOP;
-    } else if (!strcmp((char *) ptr->name, "quotient")) {
-        token.content = (char *) "/";
-        token.tag = (char *) ptr->name;
-        token.type = I_OP;
     } else if (!strcmp((char *) ptr->name, "rem")) {
         token.content = "%";
         token.tag = (char *) ptr->name;
@@ -542,9 +535,11 @@ xmlNode *next(xmlNode *ptr) {
  *****************************************************************************/
 
 char *strNoSpace(char *str) {
-    int size = strlen(str);
+    size_t size = strlen(str);
     int space = 0;
-    int i;
+
+    size_t i;
+
     for (i = 0; i < size; i++)
         if (str[i] == ' ')
             space++;
@@ -552,12 +547,16 @@ char *strNoSpace(char *str) {
     char *strn = (char *) calloc(size - space + 1, sizeof(char));
 
     space = 0;
-    for (i = 0; i < size; i++)
+
+    for (i = 0; i < size; i++) {
         if (str[i] != ' ') {
             strn[space] = str[i];
             space++;
         }
+    }
+
     return strn;
+
 }
 
 #endif

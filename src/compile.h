@@ -189,7 +189,7 @@ void initial_values(xmlNode *root) {
                 }
                 // if a initial value was found
                 if (attr != NULL) {
-                    initvalue = atof((char *)xmlNodeGetContent((xmlNode *)attr));
+                    initvalue = strtod((char *)xmlNodeGetContent((xmlNode *)attr), NULL);
                 }
                 // take the variable name
                 attr = curvar->properties;
@@ -293,10 +293,10 @@ void fix(xmlNode *root, AlgList *list) {
     int counter = -1; // to count the equations
     // searching for the duplicated equation
     while ((curroot = get_component(curroot)) != NULL) {
-        xmlNode *math = get_math(curroot);
+        xmlNode *math_node = get_math(curroot);
         xmlNode *apply = NULL;
-        if (math != NULL)
-            apply = math->children;
+        if (math_node != NULL)
+            apply = math_node->children;
         int component = counter;
         while (apply != NULL) {
             if (!strcmp((char *)apply->name, "apply"))
@@ -510,7 +510,7 @@ void generate_cpu_model(sds model_name) {
     TokenNode *cur = rewind_token_list(difvarlist);
     int counter = 0;
     while (cur != NULL) {
-        fprintf(file, "        sv[%d] = %ef; //%s %s \n", counter, cur->initialvalue,
+        fprintf(file, "        sv[%d] = %e; //%s %s \n", counter, cur->initialvalue,
                 cur->token.content, cur->units);
         cur = cur->next;
         counter++;
@@ -691,7 +691,7 @@ void generate_cpu_model(sds model_name) {
                   "                } else {\n"
                   "                    dt = previous_dt = min_step;\n"
                   "                    time_new += (final_time - time_new);\n"
-                  "                    printf(\"Error: %lf\\n\", final_time - time_new);\n"
+                  "                    printf(\"Error: %%lf\\n\", final_time - time_new);\n"
                   "                    break;\n"
                   "                }\n"
                   "            } else {\n"
@@ -741,7 +741,7 @@ void generate_cpu_model(sds model_name) {
     fprintf(file, "    //Parameters\n");
     cur = rewind_token_list(parvarlist);
     while (cur != NULL) {
-        fprintf(file, "    const real %s = %.15ef;\n", cur->token.content,
+        fprintf(file, "    const real %s = %.15e;\n", cur->token.content,
                 cur->initialvalue);
         cur = cur->next;
     }
@@ -952,7 +952,7 @@ void generate_gpu_model(sds model_name) {
 
         fprintf(file,
                 "         *((real * )((char *) sv + pitch * %d) + threadID) = "
-                        "%ef; //%s %s \n",
+                        "%e; //%s %s \n",
                 counter, cur->initialvalue, cur->token.content, cur->units);
         cur = cur->next;
         counter++;
@@ -1270,20 +1270,11 @@ static void generate_c_solver(sds model_name) {
     }
     fprintf(file, "}\n\n");
 
-//    fprintf(file, "#define NEQ %d\n"
-//                  "typedef realtype real;\n"
-//                  "\n"
-//                  "\n"
-//                  "realtype stim_start = 2.0;\n"
-//                  "realtype stim_dur = 1.0;\n"
-//                  "realtype stim_current;",
-//                  counter);
-
     fprintf(file, "#define NEQ %d\n"
                   "typedef realtype real;\n"
                   "\n"
                   "\n",
-                  counter);
+            counter);
 
 
 
@@ -1291,12 +1282,6 @@ static void generate_c_solver(sds model_name) {
 
     // RHS CPU
     fprintf(file, "\n\n static int %s(realtype time_new, N_Vector sv, N_Vector rDY, void *f_data) {\n\n", model_name);
-//    fprintf(file, "stim_current = 0.0;\n"
-//                  "\n"
-//                  "\tif(t <= stim_start + stim_dur) {\n"
-//                  "\t\tstim_current = -53;\n"
-//                  "\t}\n"
-//                  "");
 
     fprintf(file, "    //State variables\n");
     cur = rewind_token_list(difvarlist);
@@ -1450,13 +1435,9 @@ static void generate_c_solver(sds model_name) {
     printf("[INFO] You can use gnuplot to plot the results: \n");
     printf("[INFO] gnuplot> plot 'out.txt' u 1:2 w lines \n\n");
 
-
-
-
     sdsfree(filename);
 }
 
-// 08/03/2008 ///////
 int print_right_alg(FILE *file, AlgList *list, TokenNode *orderedlist) {
     if (file == NULL) {
         printf("ERROR - Can't write in file, print_alg");

@@ -50,7 +50,7 @@ static void display_usage(char **argv) {
 
 void parse_options(int argc, char **argv, struct options *options) {
 
-    int opt = 0;
+    int opt;
     int option_index;
 
     if(argc == 1) {

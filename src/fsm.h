@@ -52,108 +52,106 @@ xmlNode *get_math(xmlNode *node);
 void error(char *msg, xmlNode *errpointer);
 
 int princ() {
-    int estado = 0;
+    int state = 0;
     Token token;
     memset(&token, 0, sizeof(Token));
-    while (estado != 2) {
-        switch (estado) {
-            case 0:
-                if (M() == SUCCESS)
-                    estado = 2;
-                else {
-                    return INVALID;
-                }
-                break;
+    while (state != 2) {
+        if (state == 0) {
+            if (M() == SUCCESS)
+                state = 2;
+            else {
+                return INVALID;
+            }
         }
     }
     return SUCCESS;
 }
 
 int C() {
-    int estado = 0;
+    int state = 0;
     Token token;
     memset(&token, 0, sizeof(Token));
-    while (estado != 3) {
-        switch (estado) {
+    while (state != 3) {
+        switch (state) {
             case 0: {
-
                 xmlNode *errpointer = pointer;
                 token = lex();
 
                 if (token.type == MATH)
-                    estado = 1;
+                    state = 1;
                 else {
                     error((char *) "math expected", errpointer);
                     return INVALID;
                 }
+                break;
             }
-                break;
-            case 1:
-                if (P() == SUCCESS)
-                    estado = 2;
-                else
+            case 1: {
+                if (P() == SUCCESS) {
+                    state = 2;
+                }
+                else {
                     return INVALID;
+                }
                 break;
+            }
             case 2: {
                 xmlNode *errpointer = pointer;
                 if (P() == SUCCESS)
-                    estado = 2;
+                    state = 2;
                 else {
 
                     token = lex();
                     if (token.type == CPAR)
-                        estado = 3;
+                        state = 3;
                     else {
                         error((char *) "</math> expected", errpointer);
                         return INVALID;
                     }
                 }
+                break;
             }
-                break;
-            default:
-                printf("ERROR - fsm C\n");
-                break;
+            default: fprintf(stderr, "Error on Line %d\n", __LINE__);
         }
     }
     return SUCCESS;
 }
 
 int P() {
-    int estado = 0;
+    int state = 0;
     Token token;
     memset(&token, 0, sizeof(Token));
-    while (estado != 5) {
-        switch (estado) {
+    while (state != 5) {
+        switch (state) {
             case 0: {
                 xmlNode *auxpointer = pointer;
                 int auxindex = lex_index;
                 token = lex();
                 if (token.type == OPAR)
-                    estado = 1;
+                    state = 1;
                 else {
                     pointer = auxpointer;
                     lex_index = auxindex;
                     return INVALID;
                 }
-            }
                 break;
+            }
             case 1: {
                 xmlNode *errpointer = pointer;
                 token = lex();
                 if (!strcmp(token.content, "=")) {
-                    estado = 2;
+                    state = 2;
                     push(token);
                 } else {
                     error((char *) "<eq/> expected", errpointer);
                     return INVALID;
                 }
-            }
                 break;
+            }
             case 2: {
                 xmlNode *errpointer = pointer;
                 if (D() != INVALID) {
                     pop();
-                    estado = 3;
+                    state = 3;
 
                 } else {
 
@@ -163,20 +161,20 @@ int P() {
                         eqpointer = concat_token(token, NULL);
                         alglist = attach_alg_eq(eqpointer, alglist);
                         eqpointer = concat_token(pop(), eqpointer);
-                        estado = 3;
+                        state = 3;
                     } else {
                         error((char *) "<ci> or differential equation expected", errpointer);
                         return INVALID;
                     }
                 }
-            }
                 break;
+            }
             case 3: {
                 xmlNode *auxpointer = pointer;
                 int indx = lex_index;
 
                 if (E() == SUCCESS) {
-                    estado = 4;
+                    state = 4;
                 } else {
                     pointer = auxpointer;
                     lex_index = indx;
@@ -194,28 +192,28 @@ int P() {
                     eqpointer = concat_token(t, eqpointer);
                     eqpointer = NULL;
                     if (F() == SUCCESS) {
-                        estado = 4;
+                        state = 4;
                     } else {
-                        // error("<ci>, expression or <piecewise> statement expected",
-                        // auxpointer);
                         return INVALID;
                     }
                 }
-            }
                 break;
+            }
             case 4: {
                 xmlNode *errpointer = pointer;
                 token = lex();
 
                 if (token.type == CPAR) {
                     // imprime ; ao fim da expressao
-                    estado = 5;
+                    state = 5;
                 } else {
                     error((char *) "</apply> expected", errpointer);
                     return INVALID;
                 }
-            }
                 break;
+            }
+
+            default: fprintf(stderr, "Error on Line %d\n", __LINE__);
         }
     }
     return SUCCESS;
@@ -223,19 +221,17 @@ int P() {
 
 int D() {
     DiffHeader *diff = NULL;
-    int estado = 0;
+    int state = 0;
     Token token;
     memset(&token, 0, sizeof(Token));
-    while (estado != 10) {
-        switch (estado) {
+    while (state != 10) {
+        switch (state) {
             case 0: {
-                // pode ser feito aqui nao existe expressao
-                // que comece com apply, a nao ser a diff
                 xmlNode *auxpointer = pointer;
                 int auxi = lex_index;
                 token = lex();
                 if (token.type == OPAR)
-                    estado = 1;
+                    state = 1;
                 else {
                     pointer = auxpointer;
                     lex_index = auxi;
@@ -246,7 +242,7 @@ int D() {
             case 1:
                 token = lex();
                 if (token.type == DIFF)
-                    estado = 2;
+                    state = 2;
                 else
                     return INVALID;
                 break;
@@ -257,10 +253,10 @@ int D() {
 
                 if (token.type == VARI) {
                     diff->diffvar = token;
-                    estado = 3;
+                    state = 3;
                 } else {
                     if (token.type == BVAR) {
-                        estado = 4;
+                        state = 4;
                     } else {
                         error((char *) "<bvar> or <ci> expected", errpointer);
                         return INVALID;
@@ -272,7 +268,7 @@ int D() {
                 xmlNode *errpointer = pointer;
                 token = lex();
                 if (token.type == BVAR)
-                    estado = 6;
+                    state = 6;
                 else {
                     error((char *) "<bvar> expected", errpointer);
                     return INVALID;
@@ -284,7 +280,7 @@ int D() {
                 token = lex();
                 if (token.type == VARI) {
                     diff->freevar = token;
-                    estado = 5;
+                    state = 5;
                 } else {
                     error((char *) "<ci> expected", errpointer);
                     return INVALID;
@@ -295,7 +291,7 @@ int D() {
                 xmlNode *errpointer = pointer;
                 token = lex();
                 if (token.type == CPAR)
-                    estado = 7;
+                    state = 7;
                 else {
                     error((char *) "</apply> expected", errpointer);
                     return INVALID;
@@ -309,7 +305,7 @@ int D() {
                     diff->freevar = token;
                     diff->eq = concat_token(stack[s_ind], diff->eq);
                     eqpointer = diff->eq;
-                    estado = 8;
+                    state = 8;
                 } else {
                     error((char *) "<ci> expected", errpointer);
                     return INVALID;
@@ -325,7 +321,7 @@ int D() {
                     // concatenating the equal operator
                     diff->eq = concat_token(stack[s_ind], diff->eq);
                     eqpointer = diff->eq;
-                    estado = 9;
+                    state = 9;
                 } else {
                     error((char *) "<ci> expected", errpointer);
                     return INVALID;
@@ -335,7 +331,7 @@ int D() {
             case 8:
                 token = lex();
                 if (token.type == CPAR)
-                    estado = 9;
+                    state = 9;
                 else
                     return INVALID;
                 break;
@@ -343,7 +339,7 @@ int D() {
                 token = lex();
                 if (token.type == CPAR) {
                     difvarlist = add_list(diff->diffvar, difvarlist);
-                    estado = 10;
+                    state = 10;
                 } else
                     return INVALID;
                 break;
@@ -643,9 +639,7 @@ int F() {
                 }
             }
                 break;
-            default:
-                printf("ERROR - fsm princ\n");
-                break;
+            default: fprintf(stderr, "Error on Line %d\n", __LINE__);
         }
     }
     return SUCCESS;
@@ -653,42 +647,27 @@ int F() {
 
 int I() {
 
-    int estado = 0;
+    int state = 0;
     Token token;
     memset(&token, 0, sizeof(Token));
-    while (estado != 2) {
-        switch (estado) {
+    while (state != 2) {
+        switch (state) {
             case 0: {
                 if (IF() == SUCCESS) {
-                    estado = 1;
-                    // ver quando nao houver piece
-                    /*if(token.type == PIEC)
-                    {
-                            printf("cheguei no PIEC()\n");
-                            ifheader = (IfHeader*)calloc(1,sizeof(IfHeader));
-                            iflist = attach_if_eq(ifheader, iflist);
-                            estado = 2;
-                    }
-                    else{
-                            error("<piece> expected", errpointer);
-                            return INVALID;
-                    }*/
+                    state = 1;
                 } else {
 
-                    estado = 2;
+                    state = 2;
                 }
-            }
                 break;
+            }
             case 1: {
-                // 				xmlNode *errpointer = pointer;
-                // 				token = lex();
-                // 				xmlNode *auxpointer = pointer;
-                // 				int auxindex = lex_index;
                 if (I() == SUCCESS) {
-                    estado = 2;
+                    state = 2;
                 }
-            }
                 break;
+            }
+            default: fprintf(stderr, "Error on Line %d\n", __LINE__);
         }
     }
     return SUCCESS;
@@ -696,12 +675,12 @@ int I() {
 
 int IF() {
 
-    int estado = 0;
+    int state = 0;
     IfHeader *ifheader = NULL;
     Token token;
     memset(&token, 0, sizeof(Token));
-    while (estado != 4) {
-        switch (estado) {
+    while (state != 4) {
+        switch (state) {
             case 0: {
                 xmlNode *auxpointer = pointer;
                 int auxindex = lex_index;
@@ -710,17 +689,16 @@ int IF() {
                     ifheader = (IfHeader *) calloc(1, sizeof(IfHeader));
                     ifheader->if_counter = p_if_counter;
                     iflist = attach_if_eq(ifheader, iflist);
-                    estado = 1;
+                    state = 1;
                 } else {
 
                     pointer = auxpointer;
                     lex_index = auxindex;
                     return INVALID;
                 }
-            }
                 break;
+            }
             case 1: {
-
                 xmlNode *auxpointer = pointer;
                 int auxindex = lex_index;
                 if (E() == SUCCESS) {
@@ -729,7 +707,7 @@ int IF() {
                         taux = taux->prev;
                     ifheader->piece = taux;
                     eqpointer = NULL;
-                    estado = 2;
+                    state = 2;
                 } else {
                     pointer = auxpointer;
                     lex_index = auxindex;
@@ -746,42 +724,39 @@ int IF() {
                     ifheader->piece = eqpointer;
                     eqpointer = NULL;
                     if (F() == SUCCESS) {
-                        estado = 3;
+                        state = 3;
                     } else {
                         error((char *) "expression or conditional statement expected",
                               auxpointer);
                         return INVALID;
                     }
                 }
-            }
                 break;
-            case 2:
-
+            }
+            case 2: {
                 if (L() == SUCCESS) {
                     TokenNode *taux = eqpointer;
                     while (taux->prev != NULL)
                         taux = taux->prev;
                     ifheader->cond = taux;
                     eqpointer = NULL;
-                    estado = 3;
+                    state = 3;
                 } else
                     return INVALID;
                 break;
+            }
             case 3: {
                 xmlNode *errpointer = pointer;
                 token = lex();
                 if (token.type == CPAR) {
-                    estado = 4;
+                    state = 4;
                 } else {
                     error((char *) "</piece> expected", errpointer);
                     return INVALID;
                 }
+                break;
             }
-                break;
-
-            default:
-                printf("ERROR - fsm princ\n");
-                break;
+            default: fprintf(stderr, "Error on Line %d\n", __LINE__);
         }
     }
     return SUCCESS;
