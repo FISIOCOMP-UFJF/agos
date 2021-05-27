@@ -13,6 +13,18 @@
 #define SUCCESS 0
 #define INVALID 1
 
+#include "string/sds.h"
+
+struct if_else {
+    sds if_condition;
+    sds if_statements;
+
+    sds *else_if_conditions;
+    sds *else_if_statements;
+
+    sds else_statements;
+};
+
 int math = 0; // indication of <math>'s founded
 
 Token stack[100];

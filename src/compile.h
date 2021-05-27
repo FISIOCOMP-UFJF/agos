@@ -1,7 +1,7 @@
 #ifndef _COMPILE_H_
 #define _COMPILE_H_
+
 #include "fsm.h"
-#include "string/sds.h"
 
 int print_diff(FILE *file, DiffList *list);
 int print_right_alg(FILE *file, AlgList *list, TokenNode *orderedlist);
@@ -103,8 +103,6 @@ int print_diff_cvode(FILE *file, DiffList *list) {
     }
     return 0;
 }
-
-
 
 int print_eq(FILE *file, TokenNode *t, char *left_token_name) {
 
@@ -762,8 +760,7 @@ void generate_cpu_model(sds model_name) {
     fprintf(file, "#ifndef MONOALG3D_MODEL_%s_H\n", model_upper);
     fprintf(file, "#define MONOALG3D_MODEL_%s_H\n\n", model_upper);
 
-    fprintf(file, "#include \"model_common.h\"\n"
-                  "#include \"model_gpu_utils.h\"\n\n");
+    fprintf(file, "#include \"model_common.h\"\n\n");
 
     cur = rewind_token_list(difvarlist);
 
@@ -772,6 +769,8 @@ void generate_cpu_model(sds model_name) {
 
     fprintf(file,
             "#ifdef __CUDACC__\n"
+            "\n"
+            "#include \"../gpu_utils/gpu_utils.h\"\n"
             "\n"
             "__global__ void kernel_set_model_initial_conditions(real *sv, int num_volumes);\n"
             "\n"
@@ -1437,6 +1436,7 @@ static void generate_c_solver(sds model_name) {
 
     sdsfree(filename);
 }
+
 
 int print_right_alg(FILE *file, AlgList *list, TokenNode *orderedlist) {
     if (file == NULL) {

@@ -68,3 +68,4 @@ CMakeFiles
 src/string/CMakeFiles/
 src/string/libstring.a
 *.cbp
+.ccls-cache/

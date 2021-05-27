@@ -1,5 +1,6 @@
 #include "compile.h"
 #include "compile_python.h"
+#include "compile_ode.h"
 #include "opts.h"
 
 int main(int argc, char **argv) {
@@ -50,9 +51,10 @@ int main(int argc, char **argv) {
 
     if(strcasecmp(opts.single_cell_lang, "c") == 0) {
         generate_c_solver(modelname);
-    }
-    else if(strcasecmp(opts.single_cell_lang, "python") == 0) {
+    } else if(strcasecmp(opts.single_cell_lang, "python") == 0) {
         generate_python_solver(modelname);
+    } else if(strcasecmp(opts.single_cell_lang, "ode") == 0) {
+        generate_ode_file(modelname);
     }
     else {
         fprintf(stderr, "[ERR] Language %s not supported!\n", opts.single_cell_lang);
