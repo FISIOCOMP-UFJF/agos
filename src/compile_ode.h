@@ -13,7 +13,6 @@ struct if_else * get_if_list_ode(IfList *list);
 
 void print_inline_if_ode(FILE *file, sds *string, struct if_else current_if, char *name) {
 
-    //TODO: fix get_if_list_ode to generate a list of ifs to allow us to call this function recursivelly
     if(file) {
         fprintf(file, "if(%s) {\n", current_if.if_condition);
         fprintf(file, "    %s = %s\n", name, current_if.if_statements);
@@ -83,10 +82,10 @@ int print_eq_ode_file(FILE *file, sds *string, TokenNode *t, char *left_token_na
             } else {
                 if (!strcmp(cur->token.content, difflist->diffheader->freevar.content)) {
                     if(file) {
-                        fprintf(file, "%s_new", cur->token.content);
+                        fprintf(file, "%s", cur->token.content);
                     }
                     if(string) {
-                        *string = sdscatprintf(*string, "%s_new", cur->token.content);
+                        *string = sdscatprintf(*string, "%s", cur->token.content);
                     }
                 }
                 else {
@@ -153,7 +152,7 @@ int print_diff_ode_file(FILE *file, DiffList *list, struct if_else *all_ifs) {
     char tmp[2048];
     while (curl != NULL) {
         fprintf(file, "\node %s' = ", curl->diffheader->diffvar.content);
-        sprintf(tmp, "%s'", curl->diffheader->diffvar.content);
+        sprintf(tmp, "ode %s'", curl->diffheader->diffvar.content);
         cur = curl->diffheader->eq->next;
         print_eq_ode_file(file, NULL, cur, tmp, all_ifs);
         curl = curl->next;
@@ -241,38 +240,6 @@ int print_right_alg_ode_file(FILE *file, AlgList *list, TokenNode *orderedlist, 
     fprintf(file, "\n");
     return 0;
 }
-
-#if 0
-int print_right_alg_ode_file(FILE *file, AlgList *list, TokenNode *orderedlist) {
-    if (file == NULL) {
-        printf("ERROR - Can't write in file, print_alg");
-        exit(1);
-    }
-    TokenNode *curl = rewind_token_list(orderedlist);
-    TokenNode *cur = NULL;
-    AlgList *curalg = NULL;
-
-    while (curl != NULL) {
-        curalg = rewind_alg_list(list);
-        while (strcmp(curalg->eq->token.content, curl->token.content) != 0) {
-            curalg = curalg->next;
-        }
-
-        fprintf(file, "\n%s = ", curalg->eq->token.content);
-        cur = curalg->eq;
-        cur = cur->next->next;
-        sds tmp = sdsnew("");
-        tmp = sdscatfmt(tmp, "%s", curalg->eq->token.content);
-
-        print_eq_ode_file(file, cur, tmp);
-
-        fprintf(file, ";");
-        curl = curl->next;
-    }
-    fprintf(file, "\n");
-    return 0;
-}
-#endif
 
 void generate_ode_file(sds model_name) {
 
