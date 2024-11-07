@@ -124,8 +124,6 @@ Token lex() {
                     pointer = pointer->children;
                 } else {
                     pointer = pointer->next;
-
-
                 }
             } else {
                 pointer = pointer->next;
@@ -149,13 +147,10 @@ Token get_token(xmlNode *ptr) {
         token.tag = (char *) ptr->name;
         token.content = token.tag;
         token.type = RDF;
-
     } else if (!strcmp((char *) ptr->name, "model")) {
         token.tag = (char *) ptr->name;
         token.content = token.tag;
         token.type = MODL;
-
-
     } else if (!strcmp((char *) ptr->name, "units")) {
         token.tag = (char *) ptr->name;
         token.content = token.tag;
@@ -203,6 +198,14 @@ Token get_token(xmlNode *ptr) {
         token.type = MATH;
     } else if (!strcmp((char *) ptr->name, "power")) {
         token.content = "pow(";
+        token.tag = (char *) ptr->name;
+        token.type = P_OP;
+    } else if (!strcmp((char *) ptr->name, "min")) {
+        token.content = "min(";
+        token.tag = (char *) ptr->name;
+        token.type = P_OP;
+    } else if (!strcmp((char *) ptr->name, "max")) {
+        token.content = "max(";
         token.tag = (char *) ptr->name;
         token.type = P_OP;
     } else if (!strcmp((char *) ptr->name, "exp")) {
@@ -478,7 +481,7 @@ Token get_token(xmlNode *ptr) {
 /*
 else if(!xmlStrcmp(name,(const xmlChar *)"not"))
 {
-	mmlnode->name = "!";     mmlnode->type = prefix;    
+	mmlnode->name = "!";     mmlnode->type = prefix;
 }
 */
 /** Relations **************************************************************

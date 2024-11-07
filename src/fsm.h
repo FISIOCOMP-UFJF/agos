@@ -27,7 +27,7 @@ struct if_else {
 
 int math = 0; // indication of <math>'s founded
 
-Token stack[100];
+Token stack[1024];
 int s_ind = -1;
 int ifs = 0;
 
@@ -240,8 +240,18 @@ int D() {
         switch (state) {
             case 0: {
                 xmlNode *auxpointer = pointer;
+
+                if(pointer->line  == 3545) {
+              //      printf("%d\n", pointer->line);
+                }
+
                 int auxi = lex_index;
                 token = lex();
+
+                if(strcmp(token.content, "dss") == 0) {
+                    printf("%s\n", token.content);
+                }
+
                 if (token.type == OPAR)
                     state = 1;
                 else {
