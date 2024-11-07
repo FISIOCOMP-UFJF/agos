@@ -201,11 +201,11 @@ Token get_token(xmlNode *ptr) {
         token.tag = (char *) ptr->name;
         token.type = P_OP;
     } else if (!strcmp((char *) ptr->name, "min")) {
-        token.content = "min(";
+        token.content = "fmin(";
         token.tag = (char *) ptr->name;
         token.type = P_OP;
     } else if (!strcmp((char *) ptr->name, "max")) {
-        token.content = "max(";
+        token.content = "fmax(";
         token.tag = (char *) ptr->name;
         token.type = P_OP;
     } else if (!strcmp((char *) ptr->name, "exp")) {

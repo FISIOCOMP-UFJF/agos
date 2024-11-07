@@ -248,10 +248,6 @@ int D() {
                 int auxi = lex_index;
                 token = lex();
 
-                if(strcmp(token.content, "dss") == 0) {
-                    printf("%s\n", token.content);
-                }
-
                 if (token.type == OPAR)
                     state = 1;
                 else {
